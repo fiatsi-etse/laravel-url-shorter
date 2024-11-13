@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Url;
-
+use App\Http\Requests\UrlPostRequest;
 
 class UrlController extends Controller
 {
@@ -28,9 +28,19 @@ class UrlController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UrlPostRequest $request)
     {
-        //
+        $validated = $request->validated();
+        $short = substr(md5($request->url . time()), 0, 6);
+    
+        Url::create([
+            'name' => $request->get('name'),
+            'originalUrl' => $request->get('originalUrl'),
+            'generatedUrl' => config('app.url'). '/'. $short,
+            'click' => 0,
+            'active' => true,
+        ]);
+        return redirect()->route('url.list')->with('status', 'Lien court ajouté avec succès!');
     }
 
     /**

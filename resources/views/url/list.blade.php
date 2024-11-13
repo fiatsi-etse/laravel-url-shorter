@@ -5,7 +5,24 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Liste des urls') }}</div>
+                <div class="card-header">{{ __('Liste des urls') }}
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                            Launch demo modal
+                        </button>
+                    </div>
+                </div>
+
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
                 <div class="card-body">
                     @if (session('status'))
@@ -82,9 +99,7 @@
 
 
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Launch demo modal
-    </button>
+
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -92,18 +107,33 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouveau lien</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <form method="POST" action="{{route("url.store")}}">
+                        @csrf
+                        <div class="form-group">
+                            <label for="name">Nom du lien court</label>
+                            <input required type="text" class="form-control" name="name" id="name"
+                                aria-describedby="nameHelp" placeholder="Nom du lien">
+                            <small id="nameHelp" class="form-text text-muted">Un nom vous permettant de vous
+                                retrouver.</small>
+                        </div>
+                        <p></p>
+                        <div class="form-group">
+                            <label for="originalUrl">Url original</label>
+                            <input required type="text" class="form-control" id="originalUrl" name="originalUrl"
+                                placeholder="Url Original">
+                        </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
