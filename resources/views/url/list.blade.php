@@ -54,7 +54,7 @@
                                 <td>{{$url->name}}</td>
                                 <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
                                     $url->originalUrl}}</td>
-                                <td><a href="{{$url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
+                                <td><a href="{{ config('app.url') . '/' . $url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
                                         substr($url->originalUrl, 0, 30) . '...' : config('app.url') . '/' .
                                         $url->generatedUrl}}</a></td>
                                 <td>{{$url->click}}</td>

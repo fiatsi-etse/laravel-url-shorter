@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Url;
 use App\Http\Requests\UrlPostRequest;
 use App\Http\Requests\UrlUpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 class UrlController extends Controller
 {
@@ -79,5 +80,17 @@ class UrlController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function visit(string $link)
+    {
+        $url = Url::where('generatedUrl', $link)->where('active', 1)->first();
+        if($url) {
+            $url->click ++;
+            $url->save();
+            return redirect($url->originalUrl);
+        } else {
+            abort(404);
+        }
     }
 }

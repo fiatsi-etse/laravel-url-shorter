@@ -7,10 +7,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/{id}', [UrlController::class, 'visit'])->name('url.visit');
+
 Auth::routes();
 
 Route::middleware('auth')->group(function () {
-    Route::resource('url', UrlController::class)->names([
+    Route::resource('/admin/url', UrlController::class)->names([
         'store' => 'url.store',
         'index' => 'url.list',
         'update' => 'url.update'
