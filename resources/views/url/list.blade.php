@@ -8,8 +8,8 @@
                 <div class="card-header">{{ __('Liste des urls') }}
                     <div class="ms-auto">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                            Launch demo modal
+                            data-bs-target="#urlCreationModal">
+                            Créer un lien court
                         </button>
                     </div>
                 </div>
@@ -65,7 +65,10 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-secondary">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#urlEditionModal" data-url="{{$url}}" data-name="{{$url->name}}"
+                                        data-click="{{$url->click}}" data-originalUrl="{{$url->originalUrl}}"
+                                        data-generatedUrl="{{$url->generatedUrl}}" data-active="{{$url->active}}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path
@@ -102,12 +105,12 @@
 
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="urlCreationModal" tabindex="-1" role="dialog" aria-labelledby="urlCreationModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ajouter un nouveau lien</h5>
+                    <h5 class="modal-title" id="urlCreationModalLabel">Ajouter un nouveau lien</h5>
                     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -137,11 +140,74 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="urlEditionModal" tabindex="-1" role="dialog" aria-labelledby="urlEditionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="urlEditionModalLabel">Editer un lien</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="updateForm" action="#">
+                        {{method_field('patch')}}
+                        @csrf
+                        <input type="hidden" name="url_id" id="url_id">
+                        <div class="form-group">
+                            <label for="name">Nom du lien court</label>
+                            <input required type="text" class="form-control" name="name" id="name"
+                                aria-describedby="nameHelp" placeholder="Nom du lien">
+                            <small id="nameHelp" class="form-text text-muted">Un nom vous permettant de vous
+                                retrouver.</small>
+                        </div>
+                        <p></p>
+                        <div class="form-group">
+                            <label for="originalUrl">Url original</label>
+                            <input required type="text" class="form-control" id="originalUrl" name="originalUrl"
+                                placeholder="Url Original">
+                        </div>
+                        <p></p>
+                        <div class="form-group">
+                            <label for="generatedUrl">Url généré</label>
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ config('app.url') }}</span>
+                                </div>
+                                <input required type="text" class="form-control" id="generatedUrl" name="generatedUrl"
+                                    placeholder="Url généré">
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="active" name="active">
+                            <label class="form-check-label" for="active">Active</label>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
     #example_info {
         display: none;
+    }
+
+    .input-group-prepend {
+        background-color: rgb(210, 210, 210) !important;
+    }
+
+    .input-group-text {
+        background-color: unset !important;
     }
 </style>
 
@@ -159,7 +225,34 @@
         }
     }
 });
-        $("#exampleModal").modal();
+    
+    $("#urlCreationModal").modal();
     });
+
+    $('#urlEditionModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var url = button.data('url') // Extract info from data-* attributes
+        var modal = $(this)
+        // modal.find('.modal-title').text('New message to ' + recipient)
+        modal.find('.modal-body #url_id').val(url.id)
+        modal.find('.modal-body #name').val(url.name)
+        modal.find('.modal-body #originalUrl').val(url.originalUrl)
+        modal.find('.modal-body #generatedUrl').val(url.generatedUrl)
+        modal.find('.modal-body #active').val(url.active)
+
+        const checkbox = document.getElementById("active");
+
+        // Activez ou désactivez la checkbox en fonction de la valeur
+        if (url.active) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
+        }
+
+        const form = document.getElementById("updateForm");
+        const newActionUrl = "/url/"+url.id; // Remplacez par la nouvelle URL que vous voulez définir
+
+        form.action = newActionUrl;
+        })
 </script>
 @endsection
