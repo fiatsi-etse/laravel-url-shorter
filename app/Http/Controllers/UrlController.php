@@ -82,12 +82,14 @@ class UrlController extends Controller
         //
     }
 
-    public function visit(string $link)
+    public function visit(Request $request, string $link)
     {
         $url = Url::where('generatedUrl', $link)->where('active', 1)->first();
         if($url) {
-            $url->click ++;
-            $url->save();
+            if(env('APP_ENABLE_STAT')) {
+                $url->click ++;
+                $url->save();
+            }
             return redirect($url->originalUrl);
         } else {
             abort(404);
