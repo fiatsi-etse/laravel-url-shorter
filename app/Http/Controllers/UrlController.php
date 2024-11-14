@@ -65,6 +65,7 @@ class UrlController extends Controller
      */
     public function update(UrlUpdateRequest $request, string $id)
     {
+        // dd($request->all());
         $validated = $request->validated();
         $url = Url::findOrFail($request->url_id);
 

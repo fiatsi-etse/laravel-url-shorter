@@ -54,7 +54,7 @@
                                 <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
                                     $url->originalUrl}}</td>
                                 <td><a href="{{$url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
-                                        substr($url->originalUrl, 0, 30) . '...' :
+                                        substr($url->originalUrl, 0, 30) . '...' : config('app.url') . '/' .
                                         $url->generatedUrl}}</a></td>
                                 <td>{{$url->click}}</td>
                                 <td>
@@ -183,7 +183,9 @@
                         </div>
                         <p></p>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="active" name="active">
+                            <input type="hidden" id="active" name="active" value="0">
+                            <input class="form-check-input" type="checkbox" role="switch" id="activeDisplay" name="activeDisplay"
+                                value="1">
                             <label class="form-check-label" for="active">Active</label>
                         </div>
                 </div>
@@ -213,18 +215,17 @@
 
 <script>
     $(document).ready(function() {
-        	
         new DataTable('#example', {
-    layout: {
-        bottomEnd: {
-            paging: {
-                firstLast: false,
-                numbers: false,
-                previousNext: false
+        layout: {
+            bottomEnd: {
+                paging: {
+                    firstLast: false,
+                    numbers: false,
+                    previousNext: false
+                }
             }
         }
-    }
-});
+    });
     
     $("#urlCreationModal").modal();
     });
@@ -238,9 +239,9 @@
         modal.find('.modal-body #name').val(url.name)
         modal.find('.modal-body #originalUrl').val(url.originalUrl)
         modal.find('.modal-body #generatedUrl').val(url.generatedUrl)
-        modal.find('.modal-body #active').val(url.active)
+        modal.find('.modal-body #activeDisplay').val(url.active)
 
-        const checkbox = document.getElementById("active");
+        const checkbox = document.getElementById("activeDisplay");
 
         // Activez ou désactivez la checkbox en fonction de la valeur
         if (url.active) {
@@ -253,6 +254,17 @@
         const newActionUrl = "/url/"+url.id; // Remplacez par la nouvelle URL que vous voulez définir
 
         form.action = newActionUrl;
-        })
+    })
+
+    const activeCheckbox = document.getElementById('activeDisplay');
+    const active = document.getElementById('active');
+
+    activeCheckbox.addEventListener('change', function () {
+        if (activeCheckbox.checked) {
+            active.value = "1"; // Met la valeur à 1 si cochée
+        } else {
+            active.value = "0"; // Met la valeur à 0 si décochée
+        }
+    });
 </script>
 @endsection
