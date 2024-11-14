@@ -49,6 +49,7 @@
                         <tbody>
                             @foreach($urls as $url)
                             <tr>
+                                <input type="hidden" value="{{$url->originalUrl}}" name="textToCopy" id="textToCopy">
                                 <td>1</td>
                                 <td>{{$url->name}}</td>
                                 <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
@@ -76,7 +77,7 @@
                                             </path>
                                         </svg>
                                     </button>
-                                    <button type="button" class="btn btn-secondary">
+                                    <button type="button" class="btn btn-secondary" id="copyButton">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-clipboard-plus-fill" viewBox="0 0 16 16">
                                             <path
@@ -265,6 +266,17 @@
         } else {
             active.value = "0"; // Met la valeur à 0 si décochée
         }
+    });
+
+    document.getElementById("copyButton").addEventListener("click", function () {
+    const textToCopy = document.getElementById("textToCopy").value;
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+            alert('Lien court copié!')
+        })
+        .catch(err => {
+            console.error("Failed to copy text: ", err);
+        });
     });
 </script>
 @endsection
