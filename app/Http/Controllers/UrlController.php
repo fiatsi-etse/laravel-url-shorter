@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Url;
 use App\Http\Requests\UrlPostRequest;
+use App\Http\Requests\UrlUpdateRequest;
 
 class UrlController extends Controller
 {
@@ -36,7 +37,7 @@ class UrlController extends Controller
         Url::create([
             'name' => $request->get('name'),
             'originalUrl' => $request->get('originalUrl'),
-            'generatedUrl' => config('app.url'). '/'. $short,
+            'generatedUrl' => $short,
             'click' => 0,
             'active' => true,
         ]);
@@ -62,9 +63,13 @@ class UrlController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UrlUpdateRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+        $url = Url::findOrFail($request->url_id);
+
+        $url->update($request->all());
+        return redirect()->route('url.list')->with('status', 'Lien court modifié avec succès!');
     }
 
     /**
