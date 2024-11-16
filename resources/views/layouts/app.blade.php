@@ -83,7 +83,7 @@
                         @endif
                         @else
                         <li class="nav-item">
-                            <a class="{{request()->routeIs('profile.edit') ? 'nav-link active white' : 'nav-link' }}" href="{{ route('profile.edit') }}">{{ Auth::user()->name }}</a>
+                            <a class="{{request()->routeIs('profile.edit') ? 'nav-link active white' : 'nav-link' }}" href="{{ route('profile.edit') }}">{{ __('Mon compte') }}</a>
                         </li>
                         <li class="nav-item">
 
