@@ -43,12 +43,12 @@
 
                     @else
                     <li class="nav-item">
-                        <a class="{{request()->routeIs('url.list') ? 'nav-link active' : 'nav-link' }}"
-                            href="{{route('url.list')}}">Liens courts</a>
+                        <a class="{{request()->routeIs('urls.list') ? 'nav-link active' : 'nav-link' }}"
+                            href="{{route('urls.list')}}">Liens courts</a>
                     </li>
                     <li class="nav-item">
-                        <a class="{{request()->routeIs('url.admin') ? 'nav-link active' : 'nav-link' }}"
-                            href="{{route('url.list')}}">Administration</a>
+                        <a class="{{request()->routeIs('users.list') ? 'nav-link active' : 'nav-link' }}"
+                            href="{{route('users.list')}}">Administration</a>
                     </li>
                     @endguest
 

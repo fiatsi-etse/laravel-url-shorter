@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -9,13 +10,24 @@ Route::get('/', function () {
 
 Route::get('/{id}', [UrlController::class, 'visit'])->name('url.visit');
 
-Auth::routes();
+// Auth::routes();
+
+Route::group(['prefix' => 'admin'], function () {
+
+    Auth::routes();
+
+});
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/admin/url', UrlController::class)->names([
-        'store' => 'url.store',
-        'index' => 'url.list',
-        'update' => 'url.update'
+    Route::resource('/admin/urls', UrlController::class)->names([
+        'store' => 'urls.store',
+        'index' => 'urls.list',
+        'update' => 'urls.update'
+    ]);
+    Route::resource('/admin/users', UserController::class)->names([
+        'store' => 'users.store',
+        'index' => 'users.list',
+        'update' => 'users.update'
     ]);
     // Route::get('/url', [UrlController::class, 'index'])->name('url.list');
     // Route::get('/url/create', [UrlController::class, 'create'])->name('url.create');
