@@ -58,7 +58,7 @@
                                 <td><a href="{{ config('app.redirecturl') . '/' . $url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
                                         substr($url->generatedUrl, 0, 30) . '...' : config('app.redirecturl') . '/' .
                                         $url->generatedUrl}}</a></td>
-                                <td>{{$url->click}}</td>
+                                <td>{{sizeof($url->clicks)}}</td>
                                 <td>{{$url->expiryAt}}</td>
                                 <td>
                                     @if($url->active)

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Url;
+use App\Models\Click;
 use App\Http\Requests\UrlPostRequest;
 use App\Http\Requests\UrlUpdateRequest;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UrlController extends Controller
 {
@@ -16,7 +18,7 @@ class UrlController extends Controller
      */
     public function index()
     {
-        return view("url.list", ["urls" => Url::paginate(10)]);
+        return view("url.list", ["urls" => Url::with('clicks')->paginate(10)]);
     }
 
     /**
@@ -41,7 +43,6 @@ class UrlController extends Controller
                 'name' => $request->get('name'),
                 'originalUrl' => $request->get('originalUrl'),
                 'generatedUrl' => $short,
-                'click' => 0,
                 'active' => true,
                 'expiryAt' => $request->get('expiryAt')
             ]);
@@ -50,7 +51,6 @@ class UrlController extends Controller
                 'name' => $request->get('name'),
                 'originalUrl' => $request->get('originalUrl'),
                 'generatedUrl' => $short,
-                'click' => 0,
                 'active' => true,
             ]);
         }
@@ -112,12 +112,28 @@ class UrlController extends Controller
 
     public function visit(Request $request, string $link)
     {
+        // dd($request);
         $url = Url::where('generatedUrl', $link)->where('active', 1)->first();
+
+
         if($url) {
+
             if(env('APP_ENABLE_STAT')) {
-                $url->click ++;
-                $url->save();
+                Click::create([
+                    'urlId' => $url->id,
+                    'userAgent' => $request->userAgent(),
+                    'ip' => $request->ip(),
+                ]);
             }
+            
+            if($url->expiryAt!=null) {
+                $today = Carbon::today(); // La date actuelle sans heure
+                $dateToCheck = Carbon::createFromFormat('Y-m-d', $url->expiryAt);
+                if ($today->greaterThan($dateToCheck)) {
+                    abort(404);
+                }
+            }
+            
             return redirect($url->originalUrl);
         } else {
             abort(404);

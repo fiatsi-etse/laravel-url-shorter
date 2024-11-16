@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('urls', function (Blueprint $table) {
+        Schema::create('clicks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('originalUrl');
-            $table->string('generatedUrl')->unique();
-            $table->boolean('active')->default(true);
-            $table->date('expiryAt')->nullable()->default(null);
+            $table->integer('urlId');
+            $table->text('userAgent');
+            $table->string('ip');
             $table->timestamps();
+
+            $table->foreign('urlId')->references('id')->on('urls');    
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('urls');
+        Schema::dropIfExists('clicks');
     }
 };
