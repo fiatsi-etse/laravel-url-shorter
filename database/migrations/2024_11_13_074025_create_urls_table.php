@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('generatedUrl')->unique();
             $table->boolean('active')->default(true);
             $table->integer('click')->default(0);
+            $table->date('expiryAt')->nullable()->default(null);
             $table->timestamps();
         });
     }

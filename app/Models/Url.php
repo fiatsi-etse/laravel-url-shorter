@@ -18,6 +18,7 @@ class Url extends Model
         'originalUrl',
         'generatedUrl',
         'active',
-        'active',
+        'click',
+        'expiryAt'
     ];
 }

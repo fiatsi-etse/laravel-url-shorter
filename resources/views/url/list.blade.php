@@ -42,6 +42,7 @@
                                 <th>Url d'origine</th>
                                 <th>Url court</th>
                                 <th>Nombre de clicks</th>
+                                <th>Date d'expiration</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -58,6 +59,7 @@
                                         substr($url->originalUrl, 0, 30) . '...' : config('app.url') . '/' .
                                         $url->generatedUrl}}</a></td>
                                 <td>{{$url->click}}</td>
+                                <td>{{$url->expiryAt}}</td>
                                 <td>
                                     @if($url->active)
                                     <span class="badge bg-success">Actif</span>
@@ -117,7 +119,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{route("urls.store")}}">
+                    <form id="urlForm" method="POST" action="{{route("urls.store")}}">
                         @csrf
                         <div class="form-group">
                             <label for="name">Nom du lien court</label>
@@ -128,9 +130,30 @@
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originalUrl">Url original</label>
+                            <label for="originalUrl">{{__('Url original')}}</label>
                             <input required type="text" class="form-control" id="originalUrl" name="originalUrl"
                                 placeholder="Url Original">
+                        </div>
+                        <p></p>
+                        <div class="form-group">
+                            <label for="originalUrl">{{__('Ajouter une date d\'expiration')}}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="noOption" name="addExpiry" value="0" checked>
+                                <label class="form-check-label" for="no">
+                                  {{__('Non')}}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="yesOption" name="addExpiry" value="1">
+                                <label class="form-check-label" for="yes">
+                                  {{__('Oui')}}
+                                </label>
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="form-group" id="expiryDateField">
+                            <label for="expiryAt">{{__('Date d\'expiration')}}</label>
+                            <input id="expiryAt" name="expiryAt" class="form-control" type="date" />                        
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -235,6 +258,7 @@
         var button = $(event.relatedTarget) // Button that triggered the modal
         var url = button.data('url') // Extract info from data-* attributes
         var modal = $(this)
+        console.log(url)
         // modal.find('.modal-title').text('New message to ' + recipient)
         modal.find('.modal-body #url_id').val(url.id)
         modal.find('.modal-body #name').val(url.name)
@@ -268,14 +292,44 @@
         }
     });
 
-    document.getElementById("copyButton").addEventListener("click", function () {
-    const textToCopy = document.getElementById("textToCopy").value;
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            alert('Lien court copié!')
-        })
-        .catch(err => {
-            console.error("Failed to copy text: ", err);
+    // document.getElementById("copyButton").addEventListener("click", function () {
+    // const textToCopy = document.getElementById("textToCopy").value;
+    // navigator.clipboard.writeText(textToCopy)
+    //     .then(() => {
+    //         alert('Lien court copié!')
+    //     })
+    //     .catch(err => {
+    //         console.error("Failed to copy text: ", err);
+    //     });
+    // });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the radio buttons and the date field
+        const yesOption = document.getElementById('yesOption');
+        const noOption = document.getElementById('noOption');
+        const expiryDateField = document.getElementById('expiryDateField');
+        const form = document.getElementById('urlForm');
+        const expiryAtInput = document.getElementById('expiryAt');
+
+        expiryDateField.style.display = 'none';
+
+        // Add event listeners to the radio buttons
+        yesOption.addEventListener('change', function () {
+            if (yesOption.checked) {
+                expiryDateField.style.display = 'block'; // Show the date field
+            }
+        });
+
+        noOption.addEventListener('change', function () {
+            if (noOption.checked) {
+                expiryDateField.style.display = 'none'; // Hide the date field
+            }
+        });
+
+        form.addEventListener('submit', function (event) {
+            if (noOption.checked) {
+                expiryAtInput.removeAttribute('name'); // Remove the name attribute so it's not submitted
+            }
         });
     });
 </script>

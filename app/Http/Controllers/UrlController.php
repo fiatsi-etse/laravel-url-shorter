@@ -32,16 +32,28 @@ class UrlController extends Controller
      */
     public function store(UrlPostRequest $request)
     {
+        // dd($request);
         $validated = $request->validated();
         $short = substr(md5($request->url . time()), 0, 6);
-    
-        Url::create([
-            'name' => $request->get('name'),
-            'originalUrl' => $request->get('originalUrl'),
-            'generatedUrl' => $short,
-            'click' => 0,
-            'active' => true,
-        ]);
+
+        if($request->get('addExpiry') == "1") {
+            Url::create([
+                'name' => $request->get('name'),
+                'originalUrl' => $request->get('originalUrl'),
+                'generatedUrl' => $short,
+                'click' => 0,
+                'active' => true,
+                'expiryAt' => $request->get('expiryAt')
+            ]);
+        } else {
+            Url::create([
+                'name' => $request->get('name'),
+                'originalUrl' => $request->get('originalUrl'),
+                'generatedUrl' => $short,
+                'click' => 0,
+                'active' => true,
+            ]);
+        }
         return redirect()->route('urls.list')->with('status', 'Lien court ajouté avec succès!');
     }
 
