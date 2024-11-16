@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Requests\UserPostRequest;
+use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,9 +29,15 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserPostRequest $request)
     {
-        //
+        $validated = $request->validated();
+        User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
+        return redirect()->route('users.list')->with('status', 'Utilisateur ajouté avec succès!');
     }
 
     /**
@@ -50,9 +59,13 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request, string $id)
     {
-        //
+        $validated = $request->validated();
+        $user = User::findOrFail($id);
+
+        $user->update($request->all());
+        return redirect()->route('users.list')->with('status', 'Utilisateur modifié avec succès!');
     }
 
     /**

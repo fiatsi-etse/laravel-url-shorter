@@ -50,7 +50,7 @@
                             @foreach($urls as $url)
                             <tr>
                                 <input type="hidden" value="{{$url->originalUrl}}" name="textToCopy" id="textToCopy">
-                                <td>1</td>
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{$url->name}}</td>
                                 <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
                                     $url->originalUrl}}</td>
@@ -252,7 +252,7 @@
         }
 
         const form = document.getElementById("updateForm");
-        const newActionUrl = "/urls/"+url.id; // Remplacez par la nouvelle URL que vous voulez définir
+        const newActionUrl = "/admin/urls/"+url.id; // Remplacez par la nouvelle URL que vous voulez définir
 
         form.action = newActionUrl;
     })

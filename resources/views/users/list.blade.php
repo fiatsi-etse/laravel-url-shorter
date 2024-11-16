@@ -40,19 +40,15 @@
                                 <th>N</th>
                                 <th>Nom</th>
                                 <th>adresse mail</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($users as $user)
                             <tr>
-                                <td>1</td>
+                                <td>{{$loop->iteration}}</td>
                                 <td>{{$user->name}}</td>
                                 <td>{{$user->email}}</td>
-                                <td>
-                                    ok
-                                </td>
                                 <td>
                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                                         data-bs-target="#userEditionModal" data-user="{{$user}}">
@@ -110,8 +106,8 @@
                             <input required type="password" class="form-control" id="password" name="password">
                         </div>
                         <div class="form-group">
-                            <label for="passwordConfirm">Confirmez le mot de passe</label>
-                            <input required type="password" class="form-control" id="passwordConfirm" name="passwordConfirm">
+                            <label for="password_confirmation">Confirmez le mot de passe</label>
+                            <input required type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -139,41 +135,30 @@
                         @csrf
                         <input type="hidden" name="user_id" id="user_id">
                         <div class="form-group">
-                            <label for="name">Nom du lien court</label>
+                            <label for="name">Nom</label>
                             <input required type="text" class="form-control" name="name" id="name"
                                 aria-describedby="nameHelp" placeholder="Nom du lien">
-                            <small id="nameHelp" class="form-text text-muted">Un nom vous permettant de vous
-                                retrouver.</small>
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originaluser">user original</label>
-                            <input required type="text" class="form-control" id="originaluser" name="originaluser"
-                                placeholder="user Original">
+                            <label for="email">Email</label>
+                            <input required type="email" class="form-control" id="email" name="email"
+                                placeholder="email@email.com">
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="generateduser">user généré</label>
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ config('app.user') }}</span>
-                                </div>
-                                <input required type="text" class="form-control" id="generateduser" name="generateduser"
-                                    placeholder="user généré">
-                            </div>
+                            <label for="password">Mot de passe</label>
+                            <input required type="password" class="form-control" id="password" name="password">
                         </div>
                         <p></p>
-                        <div class="form-check form-switch">
-                            <input type="hidden" id="active" name="active" value="0">
-                            <input class="form-check-input" type="checkbox" role="switch" id="activeDisplay" name="activeDisplay"
-                                value="1">
-                            <label class="form-check-label" for="active">Active</label>
+                        <div class="form-group">
+                            <label for="password_confirmation">Confirmez le mot de passe</label>
+                            <input required type="password" class="form-control" id="password_confirmation" name="password_confirmation">
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
                 </div>
                 </form>
             </div>
@@ -219,45 +204,13 @@
         // modal.find('.modal-title').text('New message to ' + recipient)
         modal.find('.modal-body #user_id').val(user.id)
         modal.find('.modal-body #name').val(user.name)
-        modal.find('.modal-body #originaluser').val(user.originaluser)
-        modal.find('.modal-body #generateduser').val(user.generateduser)
-        modal.find('.modal-body #activeDisplay').val(user.active)
+        modal.find('.modal-body #email').val(user.email)
 
-        const checkbox = document.getElementById("activeDisplay");
-
-        // Activez ou désactivez la checkbox en fonction de la valeur
-        if (user.active) {
-            checkbox.checked = true;
-        } else {
-            checkbox.checked = false;
-        }
 
         const form = document.getElementById("updateForm");
-        const newActionuser = "/users/"+user.id; // Remplacez par la nouvelle user que vous voulez définir
+        const newActionuser = "/admin/users/"+user.id; // Remplacez par la nouvelle user que vous voulez définir
 
         form.action = newActionuser;
     })
-
-    const activeCheckbox = document.getElementById('activeDisplay');
-    const active = document.getElementById('active');
-
-    activeCheckbox.addEventListener('change', function () {
-        if (activeCheckbox.checked) {
-            active.value = "1"; // Met la valeur à 1 si cochée
-        } else {
-            active.value = "0"; // Met la valeur à 0 si décochée
-        }
-    });
-
-    document.getElementById("copyButton").addEventListener("click", function () {
-    const textToCopy = document.getElementById("textToCopy").value;
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            alert('Lien court copié!')
-        })
-        .catch(err => {
-            console.error("Failed to copy text: ", err);
-        });
-    });
 </script>
 @endsection

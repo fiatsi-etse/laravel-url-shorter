@@ -42,7 +42,7 @@ class UrlController extends Controller
             'click' => 0,
             'active' => true,
         ]);
-        return redirect()->route('url.list')->with('status', 'Lien court ajouté avec succès!');
+        return redirect()->route('urls.list')->with('status', 'Lien court ajouté avec succès!');
     }
 
     /**
@@ -71,7 +71,7 @@ class UrlController extends Controller
         $url = Url::findOrFail($request->url_id);
 
         $url->update($request->all());
-        return redirect()->route('url.list')->with('status', 'Lien court modifié avec succès!');
+        return redirect()->route('urls.list')->with('status', 'Lien court modifié avec succès!');
     }
 
     /**
