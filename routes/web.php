@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\PasswordController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,6 +31,12 @@ Route::middleware('auth')->group(function () {
         'index' => 'users.list',
         'update' => 'users.update'
     ]);
+
+    Route::get('/admin/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/admin/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/admin/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::put('/admin/profile/password', [PasswordController::class, 'update'])->name('user.password.update');
+    
     // Route::get('/url', [UrlController::class, 'index'])->name('url.list');
     // Route::get('/url/create', [UrlController::class, 'create'])->name('url.create');
     // Route::post('/url', [UrlController::class, 'store'])->name('url.store');

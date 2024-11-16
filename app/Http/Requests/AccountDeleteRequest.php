@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\User;
 
-class UserUpdateRequest extends FormRequest
+class AccountDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +22,9 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'current_password'],
         ];
     }
-
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -37,12 +33,8 @@ class UserUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Le nom est requis',
-            'email.required' => 'L\'adresse email est requis',
-            Rule::unique(User::class)->ignore($this->user()->id),
             'password.required' => 'Mot de passe requis',
-            'password.confirmed' => 'Les mots de passe ne sont pas les mêmes',
-            'password.min' => 'Veuillez entrer un mot de passe d\'au moins 8 caractères'
+            'password.current_password' => 'Mot de passe erroné',
         ];
     }
 }
