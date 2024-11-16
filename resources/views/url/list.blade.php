@@ -55,8 +55,8 @@
                                 <td>{{$url->name}}</td>
                                 <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
                                     $url->originalUrl}}</td>
-                                <td><a href="{{ config('app.url') . '/' . $url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
-                                        substr($url->originalUrl, 0, 30) . '...' : config('app.url') . '/' .
+                                <td><a href="{{ config('app.redirecturl') . '/' . $url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
+                                        substr($url->generatedUrl, 0, 30) . '...' : config('app.redirecturl') . '/' .
                                         $url->generatedUrl}}</a></td>
                                 <td>{{$url->click}}</td>
                                 <td>{{$url->expiryAt}}</td>
@@ -206,6 +206,27 @@
                             </div>
                         </div>
                         <p></p>
+                        <div class="form-group">
+                            <label for="originalUrl">{{__('Ajouter une date d\'expiration')}}</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="noOptionUpdate" name="addExpiry" value="0">
+                                <label class="form-check-label" for="no">
+                                  {{__('Non')}}
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="yesOptionUpdate" name="addExpiry" value="1">
+                                <label class="form-check-label" for="yes">
+                                  {{__('Oui')}}
+                                </label>
+                            </div>
+                        </div>
+                        <p></p>
+                        <div class="form-group" id="expiryDateFieldUpdate">
+                            <label for="expiryAt">{{__('Date d\'expiration')}}</label>
+                            <input id="expiryAt" name="expiryAt" class="form-control" type="date" />                        
+                        </div>
+                        <p></p>
                         <div class="form-check form-switch">
                             <input type="hidden" id="active" name="active" value="0">
                             <input class="form-check-input" type="checkbox" role="switch" id="activeDisplay" name="activeDisplay"
@@ -265,8 +286,25 @@
         modal.find('.modal-body #originalUrl').val(url.originalUrl)
         modal.find('.modal-body #generatedUrl').val(url.generatedUrl)
         modal.find('.modal-body #activeDisplay').val(url.active)
+        modal.find('.modal-body #activeDisplay').val(url.active)
+        modal.find('.modal-body #expiryAt').val(url.expiryAt)
 
         const checkbox = document.getElementById("activeDisplay");
+        const noOption = document.getElementById("noOptionUpdate");
+        const yesOption = document.getElementById("yesOptionUpdate");
+        const expiryDateField = document.getElementById('expiryDateFieldUpdate');
+
+        if(url.expiryAt==null) {
+            console.log("null")
+            noOption.checked = true;
+            yesOption.checked = false;
+            expiryDateField.style.display = 'none'; 
+        } else {
+            console.log("not null")
+            noOption.checked = false;
+            yesOption.checked = true;
+            expiryDateField.style.display = 'block'; 
+        }
 
         // Activez ou désactivez la checkbox en fonction de la valeur
         if (url.active) {
@@ -292,16 +330,16 @@
         }
     });
 
-    // document.getElementById("copyButton").addEventListener("click", function () {
-    // const textToCopy = document.getElementById("textToCopy").value;
-    // navigator.clipboard.writeText(textToCopy)
-    //     .then(() => {
-    //         alert('Lien court copié!')
-    //     })
-    //     .catch(err => {
-    //         console.error("Failed to copy text: ", err);
-    //     });
-    // });
+    document.getElementById("copyButton").addEventListener("click", function () {
+    const textToCopy = document.getElementById("textToCopy").value;
+    navigator.clipboard.writeText(textToCopy)
+        .then(() => {
+            alert('Lien court copié!')
+        })
+        .catch(err => {
+            console.error("Failed to copy text: ", err);
+        });
+    });
 
     document.addEventListener('DOMContentLoaded', function () {
         // Get the radio buttons and the date field
@@ -313,6 +351,9 @@
 
         expiryDateField.style.display = 'none';
 
+        const yesOptionUpdate = document.getElementById('yesOptionUpdate');
+        const noOptionUpdate = document.getElementById('noOptionUpdate');
+
         // Add event listeners to the radio buttons
         yesOption.addEventListener('change', function () {
             if (yesOption.checked) {
@@ -323,6 +364,18 @@
         noOption.addEventListener('change', function () {
             if (noOption.checked) {
                 expiryDateField.style.display = 'none'; // Hide the date field
+            }
+        });
+        
+        noOptionUpdate.addEventListener('change', function () {
+            if (noOptionUpdate.checked) {
+                expiryDateFieldUpdate.style.display = 'none'; // Hide the date field
+            }
+        });
+
+        yesOptionUpdate.addEventListener('change', function () {
+            if (yesOptionUpdate.checked) {
+                expiryDateFieldUpdate.style.display = 'block'; // Hide the date field
             }
         });
 

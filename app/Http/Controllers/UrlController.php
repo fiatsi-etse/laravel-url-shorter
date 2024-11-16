@@ -82,7 +82,23 @@ class UrlController extends Controller
         $validated = $request->validated();
         $url = Url::findOrFail($request->url_id);
 
-        $url->update($request->all());
+        if($request->get('addExpiry') == "1") {
+            $url->update([
+                'name' => $request->get('name'),
+                'originalUrl' => $request->get('originalUrl'),
+                'generatedUrl' => $request->get('generatedUrl'),
+                'active' => $request->get('active'),
+                'expiryAt' => $request->get('expiryAt')
+            ]);
+        } else {
+            $url->update([
+                'name' => $request->get('name'),
+                'originalUrl' => $request->get('originalUrl'),
+                'generatedUrl' => $request->get('generatedUrl'),
+                'active' => $request->get('active'),
+                'expiryAt' => null
+            ]);
+        }
         return redirect()->route('urls.list')->with('status', 'Lien court modifié avec succès!');
     }
 
