@@ -67,7 +67,7 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto nav-pills">
                         <!-- Authentication Links -->
                         @guest
                         @if (Route::has('login'))
@@ -83,7 +83,7 @@
                         @endif
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('profile.edit') }}">{{ __('Mon compte') }}</a>
+                            <a class="{{request()->routeIs('profile.edit') ? 'nav-link active white' : 'nav-link' }}" href="{{ route('profile.edit') }}">{{ Auth::user()->name }}</a>
                         </li>
                         <li class="nav-item">
 
@@ -119,10 +119,16 @@
             </div>
         </nav>
 
+        <style>
+            .white {color: white !important}
+        </style>
+
         <main class="py-4">
             @yield('content')
         </main>
     </div>
+
+    
 </body>
 
 </html>
