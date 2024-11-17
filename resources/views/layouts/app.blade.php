@@ -37,7 +37,8 @@
             <div class="container">
                 <ul class="nav nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">URL Shorter</a>
+                        <a class="{{request()->routeIs('index') ? 'nav-link active' : 'nav-link' }}"
+                            href="{{route('index')}}" class="nav-link" href="#">URL Shorter</a>
                     </li>
                     @guest
 

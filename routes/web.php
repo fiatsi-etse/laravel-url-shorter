@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UrlController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\PasswordController;
 
 Route::get('/', function () {
@@ -21,6 +22,9 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/admin/home', [HomeController::class, 'index'])->name('index');
+
     Route::resource('/admin/urls', UrlController::class)->names([
         'store' => 'urls.store',
         'index' => 'urls.list',
