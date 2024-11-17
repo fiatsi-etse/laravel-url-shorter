@@ -23,8 +23,8 @@ class UrlUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'originalUrl' => 'required|url:http,https',
-            'generatedUrl' => 'required',
+            'original_url' => 'required|url:http,https',
+            'generated_url' => 'required',
             'active' => 'required',
         ];
     }
@@ -38,8 +38,8 @@ class UrlUpdateRequest extends FormRequest
     {
         return [
             'name.required' => 'Le nom est requis',
-            'originalUrl.required' => 'L\'URL original est requis et doit être un URL',
-            'generatedUrl.required' => 'L\'URL généré est requis',
+            'original_url.required' => 'L\'URL original est requis et doit être un URL',
+            'generated_url.required' => 'L\'URL généré est requis',
             'active.required' => 'L\'état est requis'
         ];
     }

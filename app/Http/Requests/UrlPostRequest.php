@@ -23,7 +23,7 @@ class UrlPostRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'originalUrl' => 'required|url:http,https',
+            'original_url' => 'required|url:http,https',
         ];
     }
 
@@ -36,8 +36,8 @@ class UrlPostRequest extends FormRequest
     {
         return [
             'name.required' => 'Le nom est requis',
-            'originalUrl.required' => 'L\'URL original est requis et doit être un URL',
-            'originalUrl.valid' => 'L\'URL original doit être un URL'
+            'original_url.required' => 'L\'URL original est requis et doit être un URL',
+            'original_url.valid' => 'L\'URL original doit être un URL'
         ];
     }
 }

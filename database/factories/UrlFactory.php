@@ -18,8 +18,8 @@ class UrlFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'originalUrl' => fake()->url(),
-            'generatedUrl' => fake()->url(),
+            'original_url' => fake()->url(),
+            'generated_url' => fake()->url(),
             'active' => fake()->numberBetween(0,1),
             'click' => fake()->randomNumber(5, false),
         ];

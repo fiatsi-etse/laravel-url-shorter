@@ -13,15 +13,16 @@ class Click extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'urlId',
+        'url_id',
         'ip',
         'userAgent',
     ];
+
     /**
      * Get the Url that owns the click.
-     */
+    */
     public function url(): BelongsTo
     {
-        return $this->belongsTo(Url::class, 'urlId');
+        return $this->belongsTo(Url::class, 'url_id');
     }
 }

@@ -50,16 +50,16 @@
                         <tbody>
                             @foreach($urls as $url)
                             <tr>
-                                <input type="hidden" value="{{$url->originalUrl}}" name="textToCopy" id="textToCopy">
+                                <input type="hidden" value="{{$url->original_url}}" name="textToCopy" id="textToCopy">
                                 <td>{{$loop->iteration}}</td>
                                 <td>{{$url->name}}</td>
-                                <td>{{strlen($url->originalUrl) > 30 ? substr($url->originalUrl, 0, 30) . '...' :
-                                    $url->originalUrl}}</td>
-                                <td><a href="{{ config('app.redirecturl') . '/' . $url->generatedUrl}}" target="_blank">{{strlen($url->generatedUrl) > 30 ?
-                                        substr($url->generatedUrl, 0, 30) . '...' : config('app.redirecturl') . '/' .
-                                        $url->generatedUrl}}</a></td>
+                                <td>{{strlen($url->original_url) > 30 ? substr($url->original_url, 0, 30) . '...' :
+                                    $url->original_url}}</td>
+                                <td><a href="{{ config('app.redirecturl') . '/' . $url->generated_url}}" target="_blank">{{strlen($url->generated_url) > 30 ?
+                                        substr($url->generated_url, 0, 30) . '...' : config('app.redirecturl') . '/' .
+                                        $url->generated_url}}</a></td>
                                 <td>{{sizeof($url->clicks)}}</td>
-                                <td>{{$url->expiryAt}}</td>
+                                <td>{{$url->expiry_at}}</td>
                                 <td>
                                     @if($url->active)
                                     <span class="badge bg-success">Actif</span>
@@ -70,8 +70,8 @@
                                 <td>
                                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
                                         data-bs-target="#urlEditionModal" data-url="{{$url}}" data-name="{{$url->name}}"
-                                        data-click="{{$url->click}}" data-originalUrl="{{$url->originalUrl}}"
-                                        data-generatedUrl="{{$url->generatedUrl}}" data-active="{{$url->active}}">
+                                        data-click="{{$url->click}}" data-original_url="{{$url->original_url}}"
+                                        data-generated_url="{{$url->generated_url}}" data-active="{{$url->active}}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path
@@ -130,13 +130,13 @@
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originalUrl">{{__('Url original')}}</label>
-                            <input required type="text" class="form-control" id="originalUrl" name="originalUrl"
+                            <label for="original_url">{{__('Url original')}}</label>
+                            <input required type="text" class="form-control" id="original_url" name="original_url"
                                 placeholder="Url Original">
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originalUrl">{{__('Ajouter une date d\'expiration')}}</label>
+                            <label for="original_url">{{__('Ajouter une date d\'expiration')}}</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="noOption" name="addExpiry" value="0" checked>
                                 <label class="form-check-label" for="no">
@@ -152,8 +152,8 @@
                         </div>
                         <p></p>
                         <div class="form-group" id="expiryDateField">
-                            <label for="expiryAt">{{__('Date d\'expiration')}}</label>
-                            <input id="expiryAt" name="expiryAt" class="form-control" type="date" />                        
+                            <label for="expiry_at">{{__('Date d\'expiration')}}</label>
+                            <input id="expiry_at" name="expiry_at" class="form-control" type="date" />                        
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -189,25 +189,25 @@
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originalUrl">Url original</label>
-                            <input required type="text" class="form-control" id="originalUrl" name="originalUrl"
+                            <label for="original_url">Url original</label>
+                            <input required type="text" class="form-control" id="original_url" name="original_url"
                                 placeholder="Url Original">
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="generatedUrl">Url généré</label>
+                            <label for="generated_url">Url généré</label>
 
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{{ config('app.url') }}</span>
                                 </div>
-                                <input required type="text" class="form-control" id="generatedUrl" name="generatedUrl"
+                                <input required type="text" class="form-control" id="generated_url" name="generated_url"
                                     placeholder="Url généré">
                             </div>
                         </div>
                         <p></p>
                         <div class="form-group">
-                            <label for="originalUrl">{{__('Ajouter une date d\'expiration')}}</label>
+                            <label for="original_url">{{__('Ajouter une date d\'expiration')}}</label>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" id="noOptionUpdate" name="addExpiry" value="0">
                                 <label class="form-check-label" for="no">
@@ -223,8 +223,8 @@
                         </div>
                         <p></p>
                         <div class="form-group" id="expiryDateFieldUpdate">
-                            <label for="expiryAt">{{__('Date d\'expiration')}}</label>
-                            <input id="expiryAt" name="expiryAt" class="form-control" type="date" />                        
+                            <label for="expiry_at">{{__('Date d\'expiration')}}</label>
+                            <input id="expiry_at" name="expiry_at" class="form-control" type="date" />                        
                         </div>
                         <p></p>
                         <div class="form-check form-switch">
@@ -261,16 +261,18 @@
 <script>
     $(document).ready(function() {
         new DataTable('#example', {
-        layout: {
-            bottomEnd: {
-                paging: {
-                    firstLast: false,
-                    numbers: false,
-                    previousNext: false
+            layout: {
+                bottomEnd: {
+                    paging: {
+                        firstLast: false,
+                        numbers: false,
+                        previousNext: false
+                    }
                 }
             }
         }
-    });
+    );
+
     
     $("#urlCreationModal").modal();
     });
@@ -283,18 +285,18 @@
         // modal.find('.modal-title').text('New message to ' + recipient)
         modal.find('.modal-body #url_id').val(url.id)
         modal.find('.modal-body #name').val(url.name)
-        modal.find('.modal-body #originalUrl').val(url.originalUrl)
-        modal.find('.modal-body #generatedUrl').val(url.generatedUrl)
+        modal.find('.modal-body #original_url').val(url.original_url)
+        modal.find('.modal-body #generated_url').val(url.generated_url)
         modal.find('.modal-body #activeDisplay').val(url.active)
         modal.find('.modal-body #activeDisplay').val(url.active)
-        modal.find('.modal-body #expiryAt').val(url.expiryAt)
+        modal.find('.modal-body #expiry_at').val(url.expiry_at)
 
         const checkbox = document.getElementById("activeDisplay");
         const noOption = document.getElementById("noOptionUpdate");
         const yesOption = document.getElementById("yesOptionUpdate");
         const expiryDateField = document.getElementById('expiryDateFieldUpdate');
 
-        if(url.expiryAt==null) {
+        if(url.expiry_at==null) {
             console.log("null")
             noOption.checked = true;
             yesOption.checked = false;
@@ -330,16 +332,7 @@
         }
     });
 
-    document.getElementById("copyButton").addEventListener("click", function () {
-    const textToCopy = document.getElementById("textToCopy").value;
-    navigator.clipboard.writeText(textToCopy)
-        .then(() => {
-            alert('Lien court copié!')
-        })
-        .catch(err => {
-            console.error("Failed to copy text: ", err);
-        });
-    });
+    
 
     document.addEventListener('DOMContentLoaded', function () {
         // Get the radio buttons and the date field
@@ -347,7 +340,7 @@
         const noOption = document.getElementById('noOption');
         const expiryDateField = document.getElementById('expiryDateField');
         const form = document.getElementById('urlForm');
-        const expiryAtInput = document.getElementById('expiryAt');
+        const expiry_atInput = document.getElementById('expiry_at');
 
         expiryDateField.style.display = 'none';
 
@@ -381,8 +374,19 @@
 
         form.addEventListener('submit', function (event) {
             if (noOption.checked) {
-                expiryAtInput.removeAttribute('name'); // Remove the name attribute so it's not submitted
+                expiry_atInput.removeAttribute('name'); // Remove the name attribute so it's not submitted
             }
+        });
+
+        document.getElementById("copyButton")?.addEventListener("click", function () {
+            const textToCopy = document.getElementById("textToCopy").value;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('Lien court copié!')
+                })
+                .catch(err => {
+                    console.error("Failed to copy text: ", err);
+                });
         });
     });
 </script>
