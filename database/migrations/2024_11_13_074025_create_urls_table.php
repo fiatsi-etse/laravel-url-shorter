@@ -14,10 +14,14 @@ return new class extends Migration
         Schema::create('urls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('originalUrl');
-            $table->string('generatedUrl')->unique();
+            $table->string('original_url');
+            $table->string('generated_url')->unique();
             $table->boolean('active')->default(true);
-            $table->date('expiryAt')->nullable()->default(null);
+            $table->date('expiry_at')->nullable()->default(null);
+            $table->integer('user_id');
+
+
+            $table->foreign('user_id')->references('id')->on('users');    
             $table->timestamps();
         });
     }

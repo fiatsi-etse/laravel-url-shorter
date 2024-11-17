@@ -43,6 +43,7 @@
                                 <th>Url court</th>
                                 <th>Nombre de clicks</th>
                                 <th>Date d'expiration</th>
+                                <th>Créé par</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -60,6 +61,7 @@
                                         $url->generated_url}}</a></td>
                                 <td>{{sizeof($url->clicks)}}</td>
                                 <td>{{$url->expiry_at}}</td>
+                                <td>{{$url->user->name}}</td>
                                 <td>
                                     @if($url->active)
                                     <span class="badge bg-success">Actif</span>

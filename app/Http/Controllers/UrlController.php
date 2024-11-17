@@ -18,7 +18,7 @@ class UrlController extends Controller
      */
     public function index()
     {
-        return view("url.list", ["urls" => Url::with('clicks')->paginate(10)]);
+        return view("url.list", ["urls" => Url::with(['clicks', 'user'])->paginate(10)]);
     }
 
     /**
@@ -41,17 +41,19 @@ class UrlController extends Controller
         if($request->get('addExpiry') == "1") {
             Url::create([
                 'name' => $request->get('name'),
-                'originalUrl' => $request->get('originalUrl'),
-                'generatedUrl' => $short,
+                'original_url' => $request->get('original_url'),
+                'generated_url' => $short,
                 'active' => true,
-                'expiryAt' => $request->get('expiryAt')
+                'expiry_at' => $request->get('expiry_at'),
+                'user_id' => $request->user()->id
             ]);
         } else {
             Url::create([
                 'name' => $request->get('name'),
-                'originalUrl' => $request->get('originalUrl'),
-                'generatedUrl' => $short,
+                'original_url' => $request->get('original_url'),
+                'generated_url' => $short,
                 'active' => true,
+                'user_id' => $request->user()->id
             ]);
         }
         return redirect()->route('urls.list')->with('status', 'Lien court ajouté avec succès!');
@@ -85,18 +87,18 @@ class UrlController extends Controller
         if($request->get('addExpiry') == "1") {
             $url->update([
                 'name' => $request->get('name'),
-                'originalUrl' => $request->get('originalUrl'),
-                'generatedUrl' => $request->get('generatedUrl'),
+                'original_url' => $request->get('original_url'),
+                'generated_url' => $request->get('generated_url'),
                 'active' => $request->get('active'),
-                'expiryAt' => $request->get('expiryAt')
+                'expiry_at' => $request->get('expiry_at')
             ]);
         } else {
             $url->update([
                 'name' => $request->get('name'),
-                'originalUrl' => $request->get('originalUrl'),
-                'generatedUrl' => $request->get('generatedUrl'),
+                'original_url' => $request->get('original_url'),
+                'generated_url' => $request->get('generated_url'),
                 'active' => $request->get('active'),
-                'expiryAt' => null
+                'expiry_at' => null
             ]);
         }
         return redirect()->route('urls.list')->with('status', 'Lien court modifié avec succès!');
@@ -113,28 +115,28 @@ class UrlController extends Controller
     public function visit(Request $request, string $link)
     {
         // dd($request);
-        $url = Url::where('generatedUrl', $link)->where('active', 1)->first();
+        $url = Url::where('generated_url', $link)->where('active', 1)->first();
 
 
         if($url) {
 
             if(env('APP_ENABLE_STAT')) {
                 Click::create([
-                    'urlId' => $url->id,
+                    'url_id' => $url->id,
                     'userAgent' => $request->userAgent(),
                     'ip' => $request->ip(),
                 ]);
             }
             
-            if($url->expiryAt!=null) {
+            if($url->expiry_at!=null) {
                 $today = Carbon::today(); // La date actuelle sans heure
-                $dateToCheck = Carbon::createFromFormat('Y-m-d', $url->expiryAt);
+                $dateToCheck = Carbon::createFromFormat('Y-m-d', $url->expiry_at);
                 if ($today->greaterThan($dateToCheck)) {
                     abort(404);
                 }
             }
             
-            return redirect($url->originalUrl);
+            return redirect($url->original_url);
         } else {
             abort(404);
         }

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('clicks', function (Blueprint $table) {
             $table->id();
-            $table->integer('urlId');
+            $table->integer('url_id');
             $table->text('userAgent');
             $table->string('ip');
             $table->timestamps();
 
-            $table->foreign('urlId')->references('id')->on('urls');    
+            $table->foreign('url_id')->references('id')->on('urls');    
         });
     }
 
